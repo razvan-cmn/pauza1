@@ -1,115 +1,110 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1">
-<title>Pauză de reclame</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1">
+  <title>Pauză de reclame</title>
 
-<style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, #6e0000, #b30000);
-  color: #fff;
-}
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #6e0000, #b30000);
+      color: #fff;
+    }
 
-/* SAFE AREA (pentru UI TikTok) */
-.safe {
-  position: absolute;
-  inset: 0;
-  padding: 140px 60px 160px 60px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-}
+    .safe {
+      position: absolute;
+      inset: 0;
+      padding: 140px 60px 160px 60px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
 
-/* TITLU */
-.header {
-  text-align: center;
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-shadow: 0 6px 14px rgba(0,0,0,.35);
-}
+    .header {
+      text-align: center;
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-shadow: 0 6px 14px rgba(0,0,0,.35);
+    }
 
-/* VIDEO: FĂRĂ CHENAR / FĂRĂ FUNDAL NEGRU */
-.videoWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
+    /* DOAR VIDEO – fără chenar, fără fundal, fără rame */
+    .videoWrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
 
-.videoWrapper video {
-  width: 72%;          /* 👈 mărimea video-ului */
-  max-width: 1100px;   /* limită pe desktop */
-  height: auto;
-  border-radius: 22px;
-  background: transparent; /* IMPORTANT: fără “bara neagră” */
-  box-shadow: 0 18px 40px rgba(0,0,0,.28);
-}
+    .videoWrapper video {
+      width: 70%;         /* mai mic */
+      max-width: 1100px;
+      height: auto;
+      border-radius: 0;   /* IMPORTANT: fără “chenar” rotunjit */
+      background: transparent;
+      box-shadow: none;   /* IMPORTANT: fără “cadru” */
+      outline: none;
+      display: block;
+    }
 
-/* MESAJ */
-.message {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.3;
-  text-shadow: 0 4px 10px rgba(0,0,0,.35);
-}
+    .message {
+      text-align: center;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.3;
+      text-shadow: 0 4px 10px rgba(0,0,0,.35);
+    }
 
-.timer {
-  margin-top: 10px;
-  font-size: 30px;
-  font-weight: 700;
-  opacity: .92;
-}
+    .timer {
+      margin-top: 10px;
+      font-size: 30px;
+      font-weight: 700;
+      opacity: .92;
+    }
 
-/* PROGRESS */
-.barWrap {
-  width: 100%;
-  height: 14px;
-  margin-top: 14px;
-  background: rgba(255,255,255,0.20);
-  border-radius: 999px;
-  overflow: hidden;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.20);
-}
+    .barWrap {
+      width: 100%;
+      height: 14px;
+      margin-top: 14px;
+      background: rgba(255,255,255,0.20);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.20);
+    }
 
-.barFill {
-  width: 0%;
-  height: 100%;
-  background: rgba(255,255,255,0.90);
-  transition: width 1s linear;
-}
+    .barFill {
+      width: 0%;
+      height: 100%;
+      background: rgba(255,255,255,0.90);
+      transition: width 1s linear;
+    }
 
-/* RESPONSIVE: pe telefon */
-@media (max-width: 700px) {
-  .safe { padding: 120px 40px 140px 40px; }
-  .header { font-size: 44px; }
-  .message { font-size: 30px; }
-  .timer { font-size: 28px; }
-  .videoWrapper video { width: 92%; }
-}
-</style>
+    @media (max-width: 700px) {
+      .safe { padding: 120px 40px 140px 40px; }
+      .header { font-size: 44px; }
+      .message { font-size: 30px; }
+      .timer { font-size: 28px; }
+      .videoWrapper video { width: 92%; }
+    }
+  </style>
 </head>
 
 <body>
   <div class="safe">
     <div class="header">📺 PAUZĂ DE RECLAME</div>
 
-    <!-- VIDEO (fără chenar) -->
     <div class="videoWrapper">
       <video id="adVideo" playsinline muted autoplay loop preload="auto">
-        <source src="https://pruntech.com/wp-content/uploads/2025/12/Eva-V1.mp4" type="video/mp4">
+        <source src="VIDEO_URL" type="video/mp4">
       </video>
     </div>
 
-    <!-- TEXT + TIMER -->
     <div class="message">
       Scrie-ne în comentarii ce jucării vrei de la Moș! 🎁
       <div class="timer">Revenim în: <span id="time">05:00</span></div>
@@ -117,33 +112,25 @@ html, body {
     </div>
   </div>
 
-<script>
-/* TIMER 5 MINUTE */
-const TOTAL = 300;
-let remaining = TOTAL;
+  <script>
+    const TOTAL = 300;
+    let remaining = TOTAL;
 
-const timeEl = document.getElementById("time");
-const barEl  = document.getElementById("bar");
-const video  = document.getElementById("adVideo");
+    const timeEl = document.getElementById("time");
+    const barEl  = document.getElementById("bar");
+    const video  = document.getElementById("adVideo");
 
-/* Forțăm play (stabil în Browser Source) */
-video.addEventListener("canplay", () => video.play().catch(()=>{}));
-setTimeout(() => video.play().catch(()=>{}), 800);
+    video.addEventListener("canplay", () => video.play().catch(()=>{}));
+    setTimeout(() => video.play().catch(()=>{}), 800);
 
-function tick() {
-  const m = Math.floor(remaining / 60);
-  const s = remaining % 60;
-
-  timeEl.textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-  barEl.style.width = (((TOTAL - remaining) / TOTAL) * 100) + "%";
-
-  if (remaining > 0) {
-    remaining--;
-    setTimeout(tick, 1000);
-  }
-}
-tick();
-</script>
-
+    function tick() {
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      timeEl.textContent = String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+      barEl.style.width = (((TOTAL - remaining) / TOTAL) * 100) + "%";
+      if (remaining > 0) { remaining--; setTimeout(tick, 1000); }
+    }
+    tick();
+  </script>
 </body>
 </html>
