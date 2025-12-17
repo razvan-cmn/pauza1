@@ -2,122 +2,120 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1">
 <title>Pauză de reclame</title>
 
 <style>
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(180deg, #6e0000, #b30000);
-    color: #fff;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #6e0000, #b30000);
+  color: #fff;
 }
 
-/* SAFE AREA (pentru TikTok UI) */
+/* SAFE AREA (pentru UI TikTok) */
 .safe {
-    position: absolute;
-    inset: 0;
-    padding: 140px 60px 160px 60px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+  position: absolute;
+  inset: 0;
+  padding: 140px 60px 160px 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
 /* TITLU */
 .header {
-    text-align: center;
-    font-size: 48px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-shadow: 0 6px 14px rgba(0,0,0,.35);
+  text-align: center;
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-shadow: 0 6px 14px rgba(0,0,0,.35);
 }
 
-/* CHENAR VIDEO */
-.videoFrame {
-    width: 100%;
-    aspect-ratio: 16 / 9;   /* corect pentru landscape */
-    position: relative;
-    overflow: hidden;
-    border-radius: 28px;
-    background: #000;
+/* VIDEO: FĂRĂ CHENAR / FĂRĂ FUNDAL NEGRU */
+.videoWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-.videoFrame video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;      /* UMPLE FĂRĂ BARE */
-    object-position: center;
+.videoWrapper video {
+  width: 72%;          /* 👈 mărimea video-ului */
+  max-width: 1100px;   /* limită pe desktop */
+  height: auto;
+  border-radius: 22px;
+  background: transparent; /* IMPORTANT: fără “bara neagră” */
+  box-shadow: 0 18px 40px rgba(0,0,0,.28);
 }
-/* ZONA MESAJ */
+
+/* MESAJ */
 .message {
-    text-align: center;
-    font-size: 34px;
-    font-weight: 700;
-    line-height: 1.3;
-    text-shadow: 0 4px 10px rgba(0,0,0,.35);
+  text-align: center;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-shadow: 0 4px 10px rgba(0,0,0,.35);
 }
 
-/* TIMER */
 .timer {
-    margin-top: 10px;
-    font-size: 30px;
-    font-weight: 700;
-    opacity: .9;
+  margin-top: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  opacity: .92;
 }
 
-/* BARA */
+/* PROGRESS */
 .barWrap {
-    width: 100%;
-    height: 14px;
-    margin-top: 14px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 999px;
-    overflow: hidden;
+  width: 100%;
+  height: 14px;
+  margin-top: 14px;
+  background: rgba(255,255,255,0.20);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.20);
 }
 
 .barFill {
-    width: 0%;
-    height: 100%;
-    background: rgba(255,255,255,0.9);
-    transition: width 1s linear;
+  width: 0%;
+  height: 100%;
+  background: rgba(255,255,255,0.90);
+  transition: width 1s linear;
+}
+
+/* RESPONSIVE: pe telefon */
+@media (max-width: 700px) {
+  .safe { padding: 120px 40px 140px 40px; }
+  .header { font-size: 44px; }
+  .message { font-size: 30px; }
+  .timer { font-size: 28px; }
+  .videoWrapper video { width: 92%; }
 }
 </style>
 </head>
 
 <body>
-
-<div class="safe">
-
+  <div class="safe">
     <div class="header">📺 PAUZĂ DE RECLAME</div>
 
-    <div class="videoFrame">
-        <video id="adVideo"
-               playsinline
-               muted
-               autoplay
-               loop
-               preload="auto">
-            <source src="https://pruntech.com/wp-content/uploads/2025/12/Eva-V1.mp4" type="video/mp4">
-        </video>
+    <!-- VIDEO (fără chenar) -->
+    <div class="videoWrapper">
+      <video id="adVideo" playsinline muted autoplay loop preload="auto">
+        <source src="https://pruntech.com/wp-content/uploads/2025/12/Eva-V1.mp4" type="video/mp4">
+      </video>
     </div>
 
+    <!-- TEXT + TIMER -->
     <div class="message">
-        Scrie-ne în comentarii ce jucării vrei de la Moș! 🎁
-        <div class="timer">
-            Revenim în: <span id="time">05:00</span>
-        </div>
-        <div class="barWrap">
-            <div class="barFill" id="bar"></div>
-        </div>
+      Scrie-ne în comentarii ce jucării vrei de la Moș! 🎁
+      <div class="timer">Revenim în: <span id="time">05:00</span></div>
+      <div class="barWrap"><div class="barFill" id="bar"></div></div>
     </div>
-
-</div>
+  </div>
 
 <script>
 /* TIMER 5 MINUTE */
@@ -128,35 +126,24 @@ const timeEl = document.getElementById("time");
 const barEl  = document.getElementById("bar");
 const video  = document.getElementById("adVideo");
 
-/* FORȚEAZĂ PLAY (SAFE) */
-video.addEventListener("canplay", () => {
-    video.play().catch(()=>{});
-});
-setTimeout(() => {
-    video.play().catch(()=>{});
-}, 800);
+/* Forțăm play (stabil în Browser Source) */
+video.addEventListener("canplay", () => video.play().catch(()=>{}));
+setTimeout(() => video.play().catch(()=>{}), 800);
 
 function tick() {
-    const m = Math.floor(remaining / 60);
-    const s = remaining % 60;
-    timeEl.textContent =
-        String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  const m = Math.floor(remaining / 60);
+  const s = remaining % 60;
 
-    const progress = ((TOTAL - remaining) / TOTAL) * 100;
-    barEl.style.width = progress + "%";
+  timeEl.textContent = String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+  barEl.style.width = (((TOTAL - remaining) / TOTAL) * 100) + "%";
 
-    if (remaining > 0) {
-        remaining--;
-        setTimeout(tick, 1000);
-    }
+  if (remaining > 0) {
+    remaining--;
+    setTimeout(tick, 1000);
+  }
 }
-
 tick();
 </script>
 
 </body>
 </html>
-
-
-
-
