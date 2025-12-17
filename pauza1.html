@@ -39,26 +39,21 @@ html, body {
 /* CHENAR VIDEO */
 .videoFrame {
     width: 100%;
-    aspect-ratio: 16 / 9;   /* CHEIA */
-    border-radius: 28px;
-    background: rgba(255,255,255,0.08);
-    box-shadow: 0 18px 40px rgba(0,0,0,.35),
-                inset 0 0 0 2px rgba(255,255,255,.15);
+    aspect-ratio: 16 / 9;   /* corect pentru landscape */
+    position: relative;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 28px;
+    background: #000;
 }
 
-/* VIDEO – NU SE TAIE */
 .videoFrame video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover;      /* UMPLE FĂRĂ BARE */
     object-position: center;
-    transform: scale(1.35); /* 🔥 ASTA ELIMINĂ BARELE */
 }
-
 /* ZONA MESAJ */
 .message {
     text-align: center;
@@ -161,6 +156,7 @@ tick();
 
 </body>
 </html>
+
 
 
 
