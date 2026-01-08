@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Landing – Gelatiamo style elements</title>
+  <meta name="description" content="Landing page cu background zoom subtil, sticky bar, butoane Maps/Waze/Facebook/Contact, galerie foto cu modal și formular contact." />
+  <style>
+    :root{
+      --text:#fff;
+      --muted: rgba(255,255,255,.82);
+      --line: rgba(255,255,255,.16);
+      --shadow: 0 18px 55px rgba(0,0,0,.45);
+      --radius: 18px;
+      --accent:#c19d56;
+      --accent2:#e1c27a;
+      --panel: rgba(17,17,23,.72);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; margin:0; }
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:#0b0b0d;
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    /* ===== Background FIX (stă pe loc la scroll) + zoom mai pronunțat ===== */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: -20px; /* bleed ca să nu se vadă margini la zoom */
+      z-index: -1;
+      background-image: url("https://pruntech.com/wp-content/uploads/2026/01/508679500_122101009082912545_3106579771349541426_n.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      /* zoom mai pronunțat */
+      transform: scale(1.03);
+      animation: bgZoomFixed 16s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes bgZoomFixed{
+      from { transform: scale(1.03); }
+      to   { transform: scale(1.08); }
+    }
+
+    /* Mobile only: zoom out (mai mult în cadru), dar tot animat subtil */
+    @media (max-width: 640px){
+      body::before{
+        inset: -10px;
+        background-position: center 35%;
+        transform: scale(1.01);
+        animation: bgZoomFixedMobile 16s ease-in-out infinite alternate;
+      }
+    }
+
+    @keyframes bgZoomFixedMobile{
+      from { transform: scale(1.01); }
+      to   { transform: scale(1.04); }
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    img{ max-width:100%; display:block; }
+
+    .container{
+      width: min(1100px, calc(100% - 40px));
+      margin-inline:auto;
+    }
+
+    /* ===== Sticky bar (header) ===== */
+    .stickybar{
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(17,17,23,.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .stickybar .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 10px 0;
+      flex-wrap:wrap;
+    }
+    .stickybar .msg{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 800;
+      letter-spacing:.02em;
+      color: rgba(255,255,255,.92);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 18px rgba(193,157,86,.25);
+    }
+
+    /* ===== Buttons (ca în fișierul tău) ===== */
+    .btn svg{ width:18px; height:18px; flex:0 0 auto; }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      font-weight: 900;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease, filter .15s ease;
+      user-select:none;
+      white-space:nowrap;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+    .btn:hover{
+      box-shadow: 0 0 0 0 rgba(255,255,255,0),
+                  0 0 18px rgba(255,255,255,0.28);
+      filter: brightness(1.05);
+      border-color: rgba(193,157,86,.55);
+      background: rgba(193,157,86,.16);
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      border-color: rgba(193,157,86,.65);
+      background: linear-gradient(135deg, rgba(193,157,86,.92), rgba(225,194,122,.90));
+      color:#17120a;
+      box-shadow: 0 14px 34px rgba(193,157,86,.16);
+    }
+    .btn-dark{
+      background:#000;
+      border-color: rgba(255,255,255,.14);
+      color:#fff;
+    }
+    .btn-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    /* ===== HERO with background + tiny zoom ===== */
+    .hero-bg{
+      position: relative;
+      min-height: 92vh;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+
+    .hero-overlay{
+      position:absolute;
+      inset:0;
+      background: linear-gradient(90deg, rgba(0,0,0,.48), rgba(0,0,0,.20));
+      z-index: 1;
+    }
+
+    .hero-content{
+      position: relative;
+      z-index: 2;
+      padding: 36px 0;
+      width:100%;
+    }
+
+    .hero-card{
+      background: var(--panel);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      max-width: 980px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Animated title */
+    .title-wrap{
+      position: relative;
+      overflow: hidden;
+
+      font-size: clamp(42px, 6vw, 78px);
+      line-height: 1.08;
+      height: 1.15em;
+    }
+    .title{
+      position: absolute;
+      inset: 0 auto auto 0;
+      white-space: nowrap;
+      font-weight: 900;
+      letter-spacing: .02em;
+
+      transform: translateX(-120%);
+      opacity: 0;
+
+      animation: slideIn 12s ease-in-out infinite;
+      will-change: transform, opacity;
+      text-shadow: 0 10px 35px rgba(0,0,0,.55);
+    }
+    .title:nth-child(2){ animation-delay: 6s; }
+
+    @keyframes slideIn{
+      0%   { transform: translateX(-120%); opacity: 0; }
+      14%  { transform: translateX(0);      opacity: 1; }
+      48%  { transform: translateX(0);      opacity: 1; }
+      62%  { transform: translateX(120%);   opacity: 0; }
+      100% { transform: translateX(120%);   opacity: 0; }
+    }
+
+    .subtitle{
+      margin: 10px 0 18px;
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--muted);
+      max-width: 70ch;
+      text-shadow: 0 10px 28px rgba(0,0,0,.5);
+    }
+
+    /* “Chenarul” cu butoane Maps/Waze/Facebook/Contact */
+    .cta-box{
+      margin-top: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    /* Quick chips */
+    .quick{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 12px;
+      color: rgba(255,255,255,.86);
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+    }
+
+    /* ===== Sections ===== */
+    section{ padding: 22px 0; }
+    .section-title{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 14px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:-.2px;
+    }
+
+    /* Gallery (poze) + hover zoom + modal */
+    
+    /* Galerie - păstrează look-ul ca în fișierul inițial */
+    #galerie .container{
+      padding-top: 6px;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+    .ph{
+      grid-column: span 4;
+      border-radius: 18px;
+      border:1px solid rgba(15,23,42,.12);
+      background: #fff;
+      overflow:hidden;
+      /* păstrează proporțiile “frumoase” indiferent de imagine */
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+    }
+    .ph img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition: transform .25s ease;
+    }
+    .ph:hover img{ transform: scale(1.03); }
+
+    .modal{
+      position: fixed; inset:0;
+      display:none; align-items:center; justify-content:center;
+      background: rgba(0,0,0,.72);
+      padding: 18px; z-index: 200;
+    }
+    .modal.open{ display:flex; }
+    .modal-card{
+      width: min(980px, 100%);
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(17,17,23,.96);
+      box-shadow: 0 18px 70px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+    .modal-bar{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 12px 12px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .modal-title{ font-weight: 950; font-size: 14px; color: rgba(255,255,255,.92); }
+    .modal-body{ max-height: 78vh; overflow:auto; background: #000; }
+    .modal-body img{ width:100%; height:auto; display:block; }
+
+    /* Contact form (ca în fișierul tău) */
+    .contact-wrap{
+      background: rgba(17,17,23,.72);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+    }
+    form{ display:grid; gap:14px; }
+    label{ font-size: 13px; font-weight: 950; color: rgba(255,255,255,.86); }
+    input, textarea{
+      font-size:16px;
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.30);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{ min-height: 110px; resize: vertical; }
+    input:focus, textarea:focus{
+      border-color: rgba(193,157,86,.55);
+      box-shadow: 0 0 0 4px rgba(193,157,86,.14);
+    }
+    .note{ color: rgba(255,255,255,.70); font-size: 13px; margin: 8px 0 0; }
+
+    footer{
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding: 18px 0 30px;
+      color: rgba(255,255,255,.78);
+      font-size: 13px;
+    }
+    .footer-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    /* Desktop tiny zoom */
+    to   { transform: scale(1.03); }
+    }
+
+    /* Mobile only: zoom out (mai puțin crop) */
+    @media (max-width: 640px){
+      to   { transform: scale(1.015); }
+      }
+      .hero-card{ border-radius: 20px; padding: 18px; }
+      .hero-content{ padding: 26px 0; }
+      .title-wrap{ font-size: clamp(34px, 8vw, 52px); height: 1.18em; }
+      .btn-row{ flex-direction: row; align-items: center; }
+      .btn{ width:auto; }
+      .ph{ grid-column: span 6; aspect-ratio: 1 / 1; }
+    }
+
+    
+    @media (max-width: 380px){
+      .ph{ grid-column: span 12; aspect-ratio: 4 / 3; }
+    }
+
+@media (max-width: 920px){
+      .ph{ grid-column: span 6; min-height: 200px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .title{
+        animation: none;
+        transform: translateX(0);
+        opacity: 1;
+        position: static;
+        display: block;
+      }
+      .title-wrap{ height: auto; overflow: visible; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sticky bar message -->
+  <div class="stickybar">
+    <div class="container">
+      <div class="row">
+        <div class="msg"><span class="dot"></span> Vă așteptăm pe la noi!</div>
+        <div class="btn-row">
+          <a class="btn btn-dark" href="tel:+40746016411"><span style="font-weight:900">📞</span> 0746 016 411</a>
+          <a class="btn btn-primary" href="#contact"><span style="font-weight:900">✉️</span> Formular contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero-bg" id="top">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="container">
+        <div class="hero-card">
+          <!-- Animated titles -->
+          <div class="title-wrap">
+            <div class="title">Titlu 1 – Gelato Artigianale</div>
+            <div class="title">Titlu 2 – Vă așteptăm la noi</div>
+          </div>
+
+          <p class="subtitle">
+            Tradiție italiană, ingrediente naturale și rețete artizanale făcute cu suflet.
+          </p>
+
+          <!-- Chenar cu butoane (Maps/Waze/Facebook/Contact) -->
+          <div class="cta-box">
+            <div class="btn-row">
+              <a class="btn btn-primary" href="https://www.google.com/maps/place/Gelatiamo/@44.9448333,26.0118125,587m/data=!3m2!1e3!4b1!4m6!3m5!1s0x40b2490016ac893f:0x9580a99147b783c0!8m2!3d44.9448295!4d26.0143874!16s%2Fg%2F11xnqc58ww?entry=ttu&g_ep=EgoyMDI2MDEwNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 21s7-4.6 7-11a7 7 0 1 0-14 0c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="2"/><path d="M12 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="2"/></svg> Google Maps</a>
+              <a class="btn btn-primary" href="https://www.waze.com/ro/live-map/directions/ro/ph/ploiesti/gelatiamo?to=place.ChIJP4msFgBJskARwIO3R5GpgJU" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M7.5 14.5a3.5 3.5 0 0 1 0-7h7a4.5 4.5 0 0 1 0 9H12l-2 2-2-2H7.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 11.5h0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M13 11.5h0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> Waze</a>
+              <a class="btn btn-primary" href="https://www.facebook.com/gelatiamo.romania" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.6-1.6h1.7V4.8c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V11H7v3h2.8v8h3.7Z"/></svg> Facebook</a>
+              <a class="btn btn-primary" href="#contact"><span style="font-weight:900">✉️</span> Contact</a>
+            </div>
+
+            <div class="quick" aria-label="Informații rapide">
+              <span class="chip">🕒 11:00 – 20:30</span>
+              <span class="chip">📍 Bulevardul Republicii 151, Ploiești (100344)</span>
+              <a class="chip" href="tel:+40746016411"><span style="font-weight:900">📞</span> 0746 016 411</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Galerie foto (poze) -->
+  <section id="galerie">
+    <div class="container">
+      <div class="section-title">
+        <h2>Galerie foto</h2>
+      </div>
+
+      <div class="gallery" id="galleryGrid">
+        <!-- Păstrează numele fișierelor tale locale (ca în codul trimis): photo1.jpg etc -->
+        <div class="ph" data-full="photo1.jpg"><img src="photo1.jpg" alt="Galerie foto 1" onerror="this.src='https://via.placeholder.com/900x700?text=photo1.jpg';" /></div>
+        <div class="ph" data-full="photo2.jpg"><img src="photo2.jpg" alt="Galerie foto 2" onerror="this.src='https://via.placeholder.com/900x700?text=photo2.jpg';" /></div>
+        <div class="ph" data-full="photo3.jpg"><img src="photo3.jpg" alt="Galerie foto 3" onerror="this.src='https://via.placeholder.com/900x700?text=photo3.jpg';" /></div>
+        <div class="ph" data-full="photo4.jpg"><img src="photo4.jpg" alt="Galerie foto 4" onerror="this.src='https://via.placeholder.com/900x700?text=photo4.jpg';" /></div>
+        <div class="ph" data-full="photo5.jpg"><img src="photo5.jpg" alt="Galerie foto 5" onerror="this.src='https://via.placeholder.com/900x700?text=photo5.jpg';" /></div>
+        <div class="ph" data-full="gianni.jpg"><img src="gianni.jpg" alt="Galerie foto 6" onerror="this.src='https://via.placeholder.com/900x700?text=gianni.jpg';" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-title"><h2>Contact</h2></div>
+
+      <div class="contact-wrap">
+        <form id="contactForm">
+          <div>
+            <label for="name">Nume</label>
+            <input id="name" name="name" autocomplete="name" placeholder="Numele tău" required />
+          </div>
+
+          <div>
+            <label for="phone">Telefon</label>
+            <input id="phone" name="phone" autocomplete="tel" placeholder="07xx xxx xxx" />
+          </div>
+
+          <div>
+            <label for="message">Mesaj</label>
+            <textarea id="message" name="message" placeholder="Spune-ne ce îți dorești (produs + cantitate + dată)..." required></textarea>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-dark" type="submit"><span style="font-weight:900">✅</span> Trimite mesaj</button>
+            <a class="btn btn-primary" href="tel:+40746016411"><span style="font-weight:900">📞</span> Sună</a>
+            <a class="btn btn-primary" href="https://www.google.com/maps/place/Gelatiamo/@44.9448333,26.0118125,587m/data=!3m2!1e3!4b1!4m6!3m5!1s0x40b2490016ac893f:0x9580a99147b783c0!8m2!3d44.9448295!4d26.0143874!16s%2Fg%2F11xnqc58ww?entry=ttu&g_ep=EgoyMDI2MDEwNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 21s7-4.6 7-11a7 7 0 1 0-14 0c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="2"/><path d="M12 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="2"/></svg> Maps</a>
+            <a class="btn btn-primary" href="https://www.waze.com/ro/live-map/directions/ro/ph/ploiesti/gelatiamo?to=place.ChIJP4msFgBJskARwIO3R5GpgJU" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M7.5 14.5a3.5 3.5 0 0 1 0-7h7a4.5 4.5 0 0 1 0 9H12l-2 2-2-2H7.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 11.5h0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M13 11.5h0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> Waze</a>
+          </div>
+
+          <p class="note">Formularul deschide aplicația de email (mailto) cu mesajul completat.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-row">
+        <div>© <span id="year"></span> Gelatiamo • Ploiești</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal galerie -->
+  <div class="modal" id="imgModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="imgTitle">
+      <div class="modal-bar">
+        <div class="modal-title" id="imgTitle">Foto</div>
+        <button class="btn" type="button" id="closeImgBtn">✕ Închide</button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImg" src="" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Gallery modal
+    const imgModal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("modalImg");
+    const closeImgBtn = document.getElementById("closeImgBtn");
+
+    function openImgModal(src){
+      modalImg.src = src;
+      imgModal.classList.add("open");
+      imgModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function closeImgModal(){
+      imgModal.classList.remove("open");
+      imgModal.setAttribute("aria-hidden", "true");
+      modalImg.src = "";
+      document.body.style.overflow = "";
+    }
+
+    closeImgBtn.addEventListener("click", closeImgModal);
+    imgModal.addEventListener("click", (e) => { if(e.target === imgModal) closeImgModal(); });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && imgModal.classList.contains("open")) closeImgModal();
+    });
+
+    document.getElementById("galleryGrid").addEventListener("click", (e) => {
+      const card = e.target.closest(".ph");
+      if(!card) return;
+      const src = card.getAttribute("data-full");
+      if(src) openImgModal(src);
+    });
+
+    // Contact form -> mailto
+    document.getElementById("contactForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      const subject = encodeURIComponent("Mesaj de pe site - " + (name || "Client"));
+      const body = encodeURIComponent(
+        "Nume: " + name + "\n" +
+        "Telefon: " + phone + "\n\n" +
+        "Mesaj:\n" + message + "\n"
+      );
+
+      const to = "gelatiamoromania@gmail.com";
+      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    });
+  </script>
+</body>
+</html>
